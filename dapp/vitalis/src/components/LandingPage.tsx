@@ -13,6 +13,8 @@ interface LandingPageProps {
 export function LandingPage({ onRegistrationComplete }: LandingPageProps) {
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showContactForm, setShowContactForm] = useState(false);
+  const [contactFormData, setContactFormData] = useState({ name: "", email: "", message: "" });
   const account = useCurrentAccount();
 
   const clientSteps = [
@@ -25,7 +27,7 @@ export function LandingPage({ onRegistrationComplete }: LandingPageProps) {
   ];
 
   const providerSteps = [
-    { num: "1", title: "Register", desc: "Sign up as specialist/company" },
+    { num: "1", title: "Contact Us", desc: "Contact us via the form" },
     { num: "2", title: "Authorization", desc: "Status becomes Pending" },
     { num: "3", title: "Get Approved", desc: "Verification process" },
     { num: "4", title: "Operate", desc: "Manage appointments & clients" },
@@ -175,6 +177,7 @@ export function LandingPage({ onRegistrationComplete }: LandingPageProps) {
             </Button>
             <Button
               size="2"
+              onClick={() => setShowContactForm(true)}
               style={{
                 background: "var(--accent-gradient)",
                 color: "white",
@@ -554,6 +557,133 @@ export function LandingPage({ onRegistrationComplete }: LandingPageProps) {
               >
                 Cancel
               </Button>
+            </Flex>
+          </Card>
+        </Box>
+      )}
+
+      {/* Contact Form Modal */}
+      {showContactForm && (
+        <Box
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+          onClick={() => setShowContactForm(false)}
+        >
+          <Card
+            style={{
+              maxWidth: "500px",
+              width: "90%",
+              padding: "2.5rem",
+              background: "var(--secondary-bg)",
+              border: "1px solid var(--border-color)",
+              borderRadius: "var(--border-radius-lg)",
+              boxShadow: "var(--box-shadow-lg)",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Flex direction="column" gap="2rem">
+              <Flex direction="column" gap="1rem">
+                <Heading size="6" style={{ fontFamily: "var(--font-heading)", fontWeight: 600 }}>
+                  Contact Us
+                </Heading>
+                <Text size="3" style={{ color: "var(--text-light)", lineHeight: 1.6 }}>
+                  Get in touch with our team. Fill out the form below and we'll get back to you soon.
+                </Text>
+              </Flex>
+
+              <Flex direction="column" gap="1.5rem">
+                <input
+                  type="text"
+                  placeholder="Your Name"
+                  value={contactFormData.name}
+                  onChange={(e) => setContactFormData({ ...contactFormData, name: e.target.value })}
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem",
+                    border: "1px solid var(--border-color)",
+                    borderRadius: "var(--border-radius-sm)",
+                    fontFamily: "var(--font-body)",
+                    fontSize: "1rem",
+                  }}
+                />
+                <input
+                  type="email"
+                  placeholder="Your Email"
+                  value={contactFormData.email}
+                  onChange={(e) => setContactFormData({ ...contactFormData, email: e.target.value })}
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem",
+                    border: "1px solid var(--border-color)",
+                    borderRadius: "var(--border-radius-sm)",
+                    fontFamily: "var(--font-body)",
+                    fontSize: "1rem",
+                  }}
+                />
+                <textarea
+                  placeholder="Your Message"
+                  value={contactFormData.message}
+                  onChange={(e) => setContactFormData({ ...contactFormData, message: e.target.value })}
+                  style={{
+                    width: "100%",
+                    minHeight: "120px",
+                    padding: "0.75rem",
+                    border: "1px solid var(--border-color)",
+                    borderRadius: "var(--border-radius-sm)",
+                    fontFamily: "var(--font-body)",
+                    fontSize: "1rem",
+                    resize: "vertical",
+                  }}
+                />
+              </Flex>
+
+              <Flex gap="1rem">
+                <Button
+                  size="3"
+                  onClick={() => {
+                    setContactFormData({ name: "", email: "", message: "" });
+                    setShowContactForm(false);
+                  }}
+                  style={{
+                    background: "var(--accent-gradient)",
+                    color: "white",
+                    cursor: "pointer",
+                    borderRadius: "var(--border-radius-sm)",
+                    padding: "0.75rem 1.5rem",
+                    fontWeight: 500,
+                    transition: "var(--transition)",
+                    flex: 1,
+                  }}
+                >
+                  Send Message
+                </Button>
+                <Button
+                  size="3"
+                  onClick={() => setShowContactForm(false)}
+                  style={{
+                    background: "transparent",
+                    color: "var(--text-color)",
+                    border: "1px solid var(--border-color)",
+                    cursor: "pointer",
+                    borderRadius: "var(--border-radius-sm)",
+                    padding: "0.75rem 1.5rem",
+                    fontWeight: 400,
+                    transition: "var(--transition)",
+                  }}
+                >
+                  Close
+                </Button>
+              </Flex>
             </Flex>
           </Card>
         </Box>
