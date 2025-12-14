@@ -11,7 +11,7 @@ import {
   Dialog,
   TextField,
 } from "@radix-ui/themes";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { businesses, type Business } from "../businesses";
 import { getClientData, saveReservation, saveClientData } from "../clientStorage";
 import { useVitalisTransactions } from "../useVitalisTransactions";
@@ -210,6 +210,7 @@ export function BusinessesPage() {
   const account = useCurrentAccount();
   const client = getClientData();
   const [selectedBusiness, setSelectedBusiness] = useState<Business | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [booking, setBooking] = useState<BookingState>({
     businessId: null,
     serviceId: null,
@@ -221,6 +222,24 @@ export function BusinessesPage() {
   const [bookingStep, setBookingStep] = useState<"service" | "provider" | "date" | "time" | "confirm">("service");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  // Filter businesses and services based on search query
+  const filteredBusinesses = businesses.filter((business) => {
+    if (!searchQuery.trim()) return true;
+    
+    const query = searchQuery.toLowerCase();
+    const matchesBusinessName = business.name.toLowerCase().includes(query);
+    const matchesCategory = business.category.toLowerCase().includes(query);
+    const matchesDescription = business.description.toLowerCase().includes(query);
+    const matchesLocation = business.location.toLowerCase().includes(query);
+    const matchesService = business.services.some(
+      (service) =>
+        service.name.toLowerCase().includes(query) ||
+        service.description.toLowerCase().includes(query)
+    );
+    
+    return matchesBusinessName || matchesCategory || matchesDescription || matchesLocation || matchesService;
+  });
 
   const handleStartBooking = (business: Business) => {
     setSelectedBusiness(business);
@@ -373,20 +392,86 @@ export function BusinessesPage() {
         </Box>
       )}
 
-      <Heading size="7" style={{ marginBottom: "2rem" }}>
+      <Heading size="7" style={{ marginBottom: "1rem" }}>
         ✨ Beauty & Wellness Businesses
       </Heading>
 
+      {/* Search Bar */}
       <Flex
-        gap="4"
-        wrap="wrap"
+        align="center"
+        gap="2"
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))",
-          gap: "24px",
+          marginBottom: "2rem",
+          padding: "0.75rem 1rem",
+          background: "var(--secondary-bg)",
+          borderRadius: "12px",
+          border: "2px solid var(--border-color)",
+          transition: "all 0.2s ease",
         }}
       >
-        {businesses.map((business) => (
+        <Search size={20} color="var(--accent-primary)" strokeWidth={1.5} />
+        <input
+          type="text"
+          placeholder="Search businesses, services, or treatments..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={{
+            flex: 1,
+            border: "none",
+            background: "transparent",
+            outline: "none",
+            fontSize: "1rem",
+            fontFamily: "var(--font-body)",
+            color: "var(--text-color)",
+          }}
+        />
+        {searchQuery && (
+          <Text
+            size="2"
+            style={{
+              color: "var(--accent-primary)",
+              cursor: "pointer",
+              fontWeight: 500,
+            }}
+            onClick={() => setSearchQuery("")}
+          >
+            Clear
+          </Text>
+        )}
+      </Flex>
+
+      {filteredBusinesses.length === 0 ? (
+        <Box
+          style={{
+            padding: "3rem",
+            textAlign: "center",
+            background: "var(--secondary-bg)",
+            borderRadius: "12px",
+          }}
+        >
+          <Heading size="4" style={{ marginBottom: "0.5rem" }}>
+            No results found
+          </Heading>
+          <Text size="3" style={{ color: "var(--text-light)" }}>
+            Try searching for different keywords or clear your search
+          </Text>
+        </Box>
+      ) : (
+        <>
+          <Text size="2" style={{ marginBottom: "1rem", color: "var(--text-light)" }}>
+            {filteredBusinesses.length} {filteredBusinesses.length === 1 ? "business" : "businesses"} found
+          </Text>
+
+          <Flex
+            gap="4"
+            wrap="wrap"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))",
+              gap: "24px",
+            }}
+          >
+            {filteredBusinesses.map((business) => (
           <Card
             key={business.id}
             style={{
@@ -477,7 +562,9 @@ export function BusinessesPage() {
             </Flex>
           </Card>
         ))}
-      </Flex>
+          </Flex>
+        </>
+      )}
 
       {/* Booking Dialog */}
       <Dialog.Root open={isBookingOpen} onOpenChange={setIsBookingOpen}>
