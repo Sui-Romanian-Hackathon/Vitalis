@@ -43,22 +43,6 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
           }}
           onClick={() => onNavigate("businesses")}
         >
-          <Box
-            style={{
-              width: "38px",
-              height: "38px",
-              borderRadius: "var(--border-radius-sm)",
-              background: "var(--accent-gradient)",
-              display: "grid",
-              placeItems: "center",
-              color: "white",
-              fontWeight: 600,
-              fontSize: "1.1rem",
-              boxShadow: "0 2px 8px rgba(176, 70, 162, 0.2)",
-            }}
-          >
-            V
-          </Box>
           <Heading
             size="5"
             style={{
