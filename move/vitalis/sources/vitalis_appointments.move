@@ -135,26 +135,4 @@ module vitalis::vitalis_appointments {
         object::delete(id);
     }
 
-    /// Test helper: build an owned appointment without sharing (test-only).
-    #[test_only]
-    public fun make_test_appointment(
-        company_id: ID,
-        provider_id: ID,
-        client_id: ID,
-        start_time: u64,
-        end_time: u64,
-        created_at: u64,
-        ctx: &mut TxContext
-    ): Appointment {
-        Appointment {
-            id: object::new(ctx),
-            company_id,
-            provider_id,
-            client_id,
-            start_time,
-            end_time,
-            status: STATUS_BOOKED,
-            created_at,
-        }
-    }
 }
