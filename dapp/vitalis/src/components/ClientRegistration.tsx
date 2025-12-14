@@ -98,23 +98,26 @@ export function ClientRegistration({ onSuccess }: ClientRegistrationProps) {
         border: "1px solid var(--border-color)",
         borderRadius: "var(--border-radius-lg)",
         boxShadow: "var(--box-shadow-lg)",
+        margin: "0 auto",
       }}
     >
       <Flex
         direction="column"
         gap="2rem"
+        align="center"
         style={{
           minHeight: step === "name" ? "auto" : "400px",
+          width: "100%",
         }}
       >
         {/* Step 1: Name and Email */}
         {step === "name" && (
-          <Flex direction="column" gap="1.5rem">
-            <Heading size="6" style={{ fontFamily: "var(--font-heading)", fontWeight: 600 }}>
+          <Flex direction="column" gap="1.5rem" style={{ width: "100%" }}>
+            <Heading size="6" style={{ fontFamily: "var(--font-heading)", fontWeight: 600, textAlign: "center" }}>
               Create Your Account
             </Heading>
 
-            <Box>
+            <Box style={{ width: "100%" }}>
               <Text size="2" style={{ color: "var(--text-light)", marginBottom: "0.5rem", display: "block" }}>
                 Full Name
               </Text>
@@ -161,6 +164,7 @@ export function ClientRegistration({ onSuccess }: ClientRegistrationProps) {
               disabled={loading}
               style={{
                 width: "100%",
+                maxWidth: "100%",
                 height: "48px",
                 background: gradientBackground,
                 color: "white",

@@ -1,8 +1,7 @@
 import { Flex, Heading, Text, Card, Box, Button } from "@radix-ui/themes";
-import { CheckCircle2, Shield, Database, FileCheck, ChevronDown } from "lucide-react";
+import { CheckCircle2, Shield, Database, FileCheck, ChevronDown, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { ConnectButton, useCurrentAccount } from "@mysten/dapp-kit";
-import { ClientRegistration } from "./ClientRegistration";
 
 interface LandingPageProps {
   onRegistrationComplete: () => void;
@@ -10,7 +9,7 @@ interface LandingPageProps {
   onLogin?: () => void;
 }
 
-export function LandingPage({ onRegistrationComplete }: LandingPageProps) {
+export function LandingPage({ onRegistrationComplete, onNavigateRegister }: LandingPageProps) {
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showContactForm, setShowContactForm] = useState(false);
@@ -231,10 +230,58 @@ export function LandingPage({ onRegistrationComplete }: LandingPageProps) {
             </Flex>
           </Flex>
 
-          {/* Right - Registration Component */}
-          <Box style={{ width: "100%", maxWidth: "460px" }}>
-            <ClientRegistration onSuccess={onRegistrationComplete} />
-          </Box>
+          {/* Right - CTA Button */}
+          <Flex direction="column" align="center" justify="center" gap="2rem" style={{ flex: 1, maxWidth: "460px", minHeight: "400px" }}>
+            <Box
+              style={{
+                padding: "3rem 2rem",
+                background: "var(--secondary-bg)",
+                borderRadius: "12px",
+                border: "2px solid var(--accent-gradient)",
+                textAlign: "center",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "1.5rem",
+              }}
+            >
+              <Heading size="5" style={{ fontFamily: "var(--font-heading)", fontWeight: 600 }}>
+                Ready to Get Started?
+              </Heading>
+              <Text size="3" style={{ color: "var(--text-light)", lineHeight: 1.6 }}>
+                Create your account to browse treatments, book appointments, and connect with top-rated beauty professionals.
+              </Text>
+              <Button
+                size="3"
+                onClick={() => onNavigateRegister?.()}
+                style={{
+                  background: "var(--accent-gradient)",
+                  color: "white",
+                  border: "none",
+                  cursor: "pointer",
+                  borderRadius: "var(--border-radius-sm)",
+                  padding: "0.875rem 2rem",
+                  fontWeight: 500,
+                  transition: "all 0.3s ease",
+                  marginTop: "0.5rem",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  fontSize: "1rem",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = "var(--box-shadow-hover)";
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = "var(--box-shadow-sm)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                }}
+              >
+                Register Now <ArrowRight size={20} />
+              </Button>
+            </Box>
+          </Flex>
         </Flex>
       </Box>
 

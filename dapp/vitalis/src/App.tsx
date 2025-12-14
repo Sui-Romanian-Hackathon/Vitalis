@@ -49,11 +49,18 @@ function App() {
           if (content && 'fields' in content) {
             const fields = content.fields as any;
             
+            // Decode display_name from bytes if needed
+            let displayName = fields.display_name || "User";
+            if (Array.isArray(displayName)) {
+              // Convert byte array to string
+              displayName = new TextDecoder().decode(new Uint8Array(displayName));
+            }
+            
             // Save client data to localStorage
             const clientData = {
               id: clientNFT.data?.objectId || account.address,
               wallet: account.address,
-              display_name: fields.display_name || "User",
+              display_name: displayName,
               email: fields.email || "",
               created_at: Number(fields.created_at) || Date.now(),
             };

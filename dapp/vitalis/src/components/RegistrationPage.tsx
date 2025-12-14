@@ -13,7 +13,13 @@ export function RegistrationPage({ onRegistrationComplete, onBackToLanding, wall
     <Flex
       direction="column"
       align="center"
-      style={{ minHeight: "100vh", background: "#FFFFFF", padding: "clamp(32px, 6vw, 64px)" }}
+      justify="center"
+      style={{ 
+        minHeight: "100vh", 
+        background: "#FFFFFF", 
+        padding: "clamp(32px, 6vw, 64px)",
+        width: "100%"
+      }}
       gap="5"
     >
       <Flex direction="column" align="center" gap="2" style={{ textAlign: "center", maxWidth: "680px", width: "100%" }}>
@@ -45,19 +51,21 @@ export function RegistrationPage({ onRegistrationComplete, onBackToLanding, wall
         )}
       </Flex>
 
-      <Card
-        style={{
-          width: "100%",
-          maxWidth: "760px",
-          padding: "32px",
-          border: "2px solid #7B3FF2",
-          borderRadius: "12px",
-          boxShadow: "0 4px 16px rgba(123, 63, 242, 0.15)",
-          background: "#fff",
-        }}
-      >
-        <ClientRegistration onSuccess={onRegistrationComplete} />
-      </Card>
+      <Box style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+        <Card
+          style={{
+            width: "100%",
+            maxWidth: "760px",
+            padding: "32px",
+            border: "2px solid #7B3FF2",
+            borderRadius: "12px",
+            boxShadow: "0 4px 16px rgba(123, 63, 242, 0.15)",
+            background: "#fff",
+          }}
+        >
+          <ClientRegistration onSuccess={onRegistrationComplete} />
+        </Card>
+      </Box>
     </Flex>
   );
 }
