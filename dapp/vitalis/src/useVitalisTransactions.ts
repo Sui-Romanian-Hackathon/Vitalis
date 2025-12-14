@@ -74,25 +74,37 @@ const extractProviderId = (result: any): string | null => {
 };
 
 const extractClientId = (result: any): string | null => {
+  // Log entire result for debugging
+  console.log("Full transaction result:", result);
+  
   const changes = result?.objectChanges as any[] | undefined;
   if (changes) {
+    console.log("objectChanges found:", changes);
     const created = changes.find(
       (c) =>
         c?.type === "created" &&
         typeof c.objectType === "string" &&
         c.objectType.includes("vitalis_identity::ClientNFT")
     );
-    if (created?.objectId) return created.objectId;
+    if (created?.objectId) {
+      console.log("Found ClientNFT in objectChanges:", created.objectId);
+      return created.objectId;
+    }
   }
 
   const createdEffects = result?.effects?.created as any[] | undefined;
   if (createdEffects) {
+    console.log("effects.created found:", createdEffects);
     const match = createdEffects.find(
       (c) => typeof c.owner?.objectType === "string" && c.owner.objectType.includes("vitalis_identity::ClientNFT")
     );
-    if (match?.reference?.objectId) return match.reference.objectId;
+    if (match?.reference?.objectId) {
+      console.log("Found ClientNFT in effects.created:", match.reference.objectId);
+      return match.reference.objectId;
+    }
   }
 
+  console.log("Could not extract ClientNFT ID from result");
   return null;
 };
 
@@ -375,17 +387,47 @@ export function useVitalisTransactions() {
   };
 
   const mintClientNFT = async (displayName: string) => {
+    if (!account) throw new Error("Wallet not connected");
+    
     const tx = new Transaction();
+    const displayNameBytes = Array.from(new TextEncoder().encode(displayName));
     tx.moveCall({
       target: `${VITALIS_MODULES.identity}::mint_client_nft`,
       arguments: [
-        tx.pure.string(displayName),
+        tx.pure.vector('u8', displayNameBytes),
         tx.pure.u64(Math.floor(Date.now() / 1000)),
       ],
     });
 
     const result = await executeTransaction(tx);
-    const clientId = extractClientId(result);
+    console.log("Transaction succeeded with digest:", result.digest);
+    
+    // Query the blockchain to find the created ClientNFT
+    let clientId: string | null = null;
+    try {
+      // Wait a moment for the transaction to be indexed
+      await new Promise(r => setTimeout(r, 1000));
+      
+      const objects = await client.getOwnedObjects({
+        owner: account.address,
+        filter: {
+          StructType: `${VITALIS_MODULES.identity}::ClientNFT`,
+        },
+      });
+      
+      if (objects.data && objects.data.length > 0) {
+        // Get the most recently created one
+        clientId = objects.data[objects.data.length - 1].data?.objectId || null;
+        console.log("Found ClientNFT object ID:", clientId);
+      }
+    } catch (err) {
+      console.error("Error querying for ClientNFT:", err);
+    }
+    
+    if (!clientId) {
+      console.error("Failed to extract clientId from transaction result:", result);
+      throw new Error("Failed to create identity NFT - could not extract NFT ID from transaction");
+    }
     return { result, clientId };
   };
 
