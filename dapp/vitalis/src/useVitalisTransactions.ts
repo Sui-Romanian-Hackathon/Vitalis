@@ -400,7 +400,7 @@ export function useVitalisTransactions() {
     });
 
     const result = await executeTransaction(tx);
-    console.log("Transaction succeeded with digest:", result.digest);
+    console.log("Transaction succeeded with digest:", (result as any)?.digest);
     
     // Query the blockchain to find the created ClientNFT
     let clientId: string | null = null;
