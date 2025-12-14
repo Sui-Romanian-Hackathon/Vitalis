@@ -11,6 +11,7 @@ import {
   Dialog,
   TextField,
 } from "@radix-ui/themes";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { businesses, type Business } from "../businesses";
 import { getClientData, saveReservation, saveClientData } from "../clientStorage";
 import { useVitalisTransactions } from "../useVitalisTransactions";
@@ -22,6 +23,185 @@ interface BookingState {
   providerId: string | null;
   date: string;
   time: string;
+}
+
+interface WeeklyCalendarProps {
+  selectedDate: string;
+  onSelectDate: (date: string) => void;
+}
+
+function WeeklyCalendar({ selectedDate, onSelectDate }: WeeklyCalendarProps) {
+  const [weekStart, setWeekStart] = useState<Date>(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const day = today.getDay();
+    const diff = today.getDate() - day;
+    return new Date(today.setDate(diff));
+  });
+
+  const getWeekDays = (startDate: Date) => {
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(startDate);
+      date.setDate(date.getDate() + i);
+      days.push(date);
+    }
+    return days;
+  };
+
+  const weekDays = getWeekDays(weekStart);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const formatDate = (date: Date) => {
+    return date.toISOString().split("T")[0];
+  };
+
+  const isDateInPast = (date: Date) => {
+    const checkDate = new Date(date);
+    checkDate.setHours(0, 0, 0, 0);
+    return checkDate < today;
+  };
+
+  const goToPreviousWeek = () => {
+    const newStart = new Date(weekStart);
+    newStart.setDate(newStart.getDate() - 7);
+    if (!isDateInPast(newStart)) {
+      setWeekStart(newStart);
+    }
+  };
+
+  const goToNextWeek = () => {
+    const newStart = new Date(weekStart);
+    newStart.setDate(newStart.getDate() + 7);
+    setWeekStart(newStart);
+  };
+
+  const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  return (
+    <Flex direction="column" gap="3">
+      <Flex justify="between" align="center" style={{ padding: "0 0.5rem" }}>
+        <Box
+          onClick={goToPreviousWeek}
+          style={{
+            background: "transparent",
+            border: "1px solid var(--border-color)",
+            cursor: isDateInPast(weekDays[0]) ? "not-allowed" : "pointer",
+            opacity: isDateInPast(weekDays[0]) ? 0.5 : 1,
+            padding: "0.5rem",
+            borderRadius: "8px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transition: "all 0.2s ease",
+          }}
+          onMouseEnter={(e) => {
+            if (!isDateInPast(weekDays[0])) {
+              e.currentTarget.style.background = "var(--accent-very-light)";
+            }
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "transparent";
+          }}
+        >
+          <ChevronLeft size={20} color="var(--accent-primary)" />
+        </Box>
+        <Text size="3" weight="bold" style={{ textAlign: "center", minWidth: "150px" }}>
+          {weekStart.toLocaleDateString("en-US", { month: "short", day: "numeric" })} - {" "}
+          {new Date(weekStart.getTime() + 6 * 24 * 60 * 60 * 1000).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+        </Text>
+        <Box
+          onClick={goToNextWeek}
+          style={{
+            background: "transparent",
+            border: "1px solid var(--border-color)",
+            cursor: "pointer",
+            padding: "0.5rem",
+            borderRadius: "8px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transition: "all 0.2s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "var(--accent-very-light)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "transparent";
+          }}
+        >
+          <ChevronRight size={20} color="var(--accent-primary)" />
+        </Box>
+      </Flex>
+
+      <Flex gap="0.75rem" justify="center" style={{ flexWrap: "wrap" }}>
+        {weekDays.map((date) => {
+          const dateStr = formatDate(date);
+          const isPast = isDateInPast(date);
+          const isSelected = selectedDate === dateStr;
+          const isToday = dateStr === formatDate(today);
+
+          return (
+            <Box
+              key={dateStr}
+              onClick={() => !isPast && onSelectDate(dateStr)}
+              style={{
+                padding: "0.75rem 0.875rem",
+                borderRadius: "12px",
+                border: isSelected ? "2px solid var(--accent-primary)" : isToday ? "2px solid var(--accent-primary)" : isPast ? "1px solid #ddd" : "1px solid var(--border-color)",
+                background: isSelected
+                  ? "var(--accent-gradient)"
+                  : isToday
+                  ? "var(--secondary-bg)"
+                  : isPast
+                  ? "#f5f5f5"
+                  : "var(--secondary-bg)",
+                cursor: isPast ? "not-allowed" : "pointer",
+                opacity: isPast ? 0.6 : 1,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "0.35rem",
+                transition: "all 0.2s ease",
+                minWidth: "65px",
+                textAlign: "center",
+              }}
+              onMouseEnter={(e) => {
+                if (!isPast) {
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow = "0 4px 12px rgba(176, 70, 162, 0.2)";
+                }
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "none";
+              }}
+            >
+              <Text
+                size="2"
+                weight="medium"
+                style={{
+                  color: isSelected ? "white" : isPast ? "#999" : "var(--text-color)",
+                }}
+              >
+                {dayNames[date.getDay()]}
+              </Text>
+              <Text
+                weight="bold"
+                style={{
+                  fontSize: "1.1rem",
+                  color: isSelected ? "white" : isPast ? "#999" : "var(--text-color)",
+                }}
+              >
+                {date.getDate()}
+              </Text>
+            </Box>
+          );
+        })}
+      </Flex>
+    </Flex>
+  );
 }
 
 export function BusinessesPage() {
@@ -420,17 +600,15 @@ export function BusinessesPage() {
               </Flex>
             )}
 
-            {/* Step 3: Date Selection */}
+            {/* Step 3: Date Selection - Weekly Calendar */}
             {bookingStep === "date" && currentService && (
               <Flex direction="column" gap="3">
                 <Text size="2" color="gray">
                   Choose a date for {currentService.name}
                 </Text>
-                <TextField.Root
-                  type="date"
-                  value={booking.date}
-                  onChange={(e) => setBooking({ ...booking, date: e.target.value })}
-                  size="3"
+                <WeeklyCalendar 
+                  selectedDate={booking.date} 
+                  onSelectDate={(date) => setBooking({ ...booking, date })}
                 />
               </Flex>
             )}

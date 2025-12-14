@@ -143,55 +143,6 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
         {/* Right Actions */}
         {client ? (
           <Flex gap="1rem" align="center" style={{ flex: "0 0 auto" }}>
-            {/* Appointment Icon */}
-            <Flex
-              align="center"
-              justify="center"
-              style={{
-                width: "40px",
-                height: "40px",
-                borderRadius: "var(--border-radius-sm)",
-                background: "transparent",
-                cursor: "pointer",
-                transition: "var(--transition)",
-                position: "relative",
-                color: "var(--text-color)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "var(--accent-very-light)";
-                e.currentTarget.style.boxShadow = "var(--box-shadow-sm)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.boxShadow = "none";
-              }}
-              title="Appointments"
-            >
-              <Calendar size={20} strokeWidth={1.5} />
-              {3 > 0 && (
-                <Badge
-                  style={{
-                    position: "absolute",
-                    top: "-2px",
-                    right: "-2px",
-                    background: "var(--accent-gradient)",
-                    color: "white",
-                    fontSize: "0.65rem",
-                    minWidth: "18px",
-                    height: "18px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: "50%",
-                    fontWeight: 600,
-                    border: "2px solid var(--secondary-bg)",
-                  }}
-                >
-                  3
-                </Badge>
-              )}
-            </Flex>
-
             {/* Messages Icon */}
             <Flex
               align="center"

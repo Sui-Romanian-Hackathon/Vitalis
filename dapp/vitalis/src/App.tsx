@@ -15,7 +15,7 @@ function App() {
   const account = useCurrentAccount();
   const suiClient = useSuiClient();
   const { mutate: disconnectWallet } = useDisconnectWallet();
-  const [currentPage, setCurrentPage] = useState<Page>("landing");
+  const [currentPage, setCurrentPage] = useState<Page>("businesses");
   const [client, setClient] = useState(getClientData());
 
   // Check if connected wallet has a ClientNFT
