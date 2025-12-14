@@ -149,6 +149,7 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
             <Flex
               align="center"
               justify="center"
+              onClick={() => setIsChatOpen(!isChatOpen)}
               style={{
                 width: "40px",
                 height: "40px",
@@ -223,6 +224,221 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
           </Flex>
         ) : null}
       </Flex>
+
+      {/* Chat Window */}
+      {isChatOpen && (
+        <Box
+          style={{
+            position: "fixed",
+            right: "2rem",
+            bottom: "2rem",
+            width: "400px",
+            height: "600px",
+            maxHeight: "calc(100vh - 150px)",
+            zIndex: 1000,
+          }}
+        >
+          <Card
+            style={{
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+              background: "var(--secondary-bg)",
+              border: "1px solid var(--border-color)",
+              borderRadius: "12px",
+              boxShadow: "0 8px 32px rgba(0, 0, 0, 0.15)",
+              overflow: "hidden",
+            }}
+          >
+            {/* Chat Header */}
+            <Flex
+              justify="between"
+              align="center"
+              style={{
+                padding: "1rem 1.25rem",
+                borderBottom: "1px solid var(--border-color)",
+                background: "var(--accent-gradient)",
+              }}
+            >
+              <Flex align="center" gap="2">
+                <MessageSquare size={20} color="white" strokeWidth={1.5} />
+                <Heading size="4" style={{ color: "white", fontWeight: 600 }}>
+                  Messages
+                </Heading>
+              </Flex>
+              <Box
+                onClick={() => setIsChatOpen(false)}
+                style={{
+                  cursor: "pointer",
+                  padding: "0.25rem",
+                  borderRadius: "6px",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                }}
+              >
+                <X size={20} color="white" strokeWidth={1.5} />
+              </Box>
+            </Flex>
+
+            {/* Conversations List */}
+            <Flex direction="column" style={{ flex: 1, overflowY: "auto" }}>
+              {/* Conversation 1 */}
+              <Box
+                style={{
+                  padding: "1rem 1.25rem",
+                  borderBottom: "1px solid var(--border-color)",
+                  cursor: "pointer",
+                  background: "var(--accent-very-light)",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "var(--accent-very-light)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "var(--accent-very-light)";
+                }}
+              >
+                <Flex direction="column" gap="1">
+                  <Flex justify="between" align="center">
+                    <Text weight="bold" size="3">
+                      Cluj Hair Atelier
+                    </Text>
+                    <Badge
+                      style={{
+                        background: "var(--accent-gradient)",
+                        color: "white",
+                        fontSize: "0.65rem",
+                      }}
+                    >
+                      1
+                    </Badge>
+                  </Flex>
+                  <Text size="2" style={{ color: "var(--text-light)" }}>
+                    Your appointment has been confirmed for tomorrow at 2 PM
+                  </Text>
+                  <Text size="1" style={{ color: "#999" }}>
+                    10 min ago
+                  </Text>
+                </Flex>
+              </Box>
+
+              {/* Conversation 2 */}
+              <Box
+                style={{
+                  padding: "1rem 1.25rem",
+                  borderBottom: "1px solid var(--border-color)",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "var(--accent-very-light)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                }}
+              >
+                <Flex direction="column" gap="1">
+                  <Flex justify="between" align="center">
+                    <Text weight="bold" size="3">
+                      Napoca Style Studio
+                    </Text>
+                    <Badge
+                      style={{
+                        background: "var(--accent-gradient)",
+                        color: "white",
+                        fontSize: "0.65rem",
+                      }}
+                    >
+                      1
+                    </Badge>
+                  </Flex>
+                  <Text size="2" style={{ color: "var(--text-light)" }}>
+                    We have availability for Friday afternoon. Would you like to book?
+                  </Text>
+                  <Text size="1" style={{ color: "#999" }}>
+                    2 hours ago
+                  </Text>
+                </Flex>
+              </Box>
+
+              {/* Conversation 3 - Read */}
+              <Box
+                style={{
+                  padding: "1rem 1.25rem",
+                  borderBottom: "1px solid var(--border-color)",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "var(--accent-very-light)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                }}
+              >
+                <Flex direction="column" gap="1">
+                  <Flex justify="between" align="center">
+                    <Text weight="bold" size="3">
+                      Beauty Center Cluj
+                    </Text>
+                  </Flex>
+                  <Text size="2" style={{ color: "var(--text-light)" }}>
+                    Thank you for your feedback! We're glad you enjoyed your visit.
+                  </Text>
+                  <Text size="1" style={{ color: "#999" }}>
+                    Yesterday
+                  </Text>
+                </Flex>
+              </Box>
+            </Flex>
+
+            {/* Chat Input (Disabled for demo) */}
+            <Flex
+              gap="2"
+              align="center"
+              style={{
+                padding: "1rem 1.25rem",
+                borderTop: "1px solid var(--border-color)",
+                background: "var(--primary-bg)",
+              }}
+            >
+              <input
+                placeholder="Select a conversation to reply..."
+                disabled
+                style={{
+                  flex: 1,
+                  padding: "0.75rem",
+                  borderRadius: "8px",
+                  border: "1px solid var(--border-color)",
+                  background: "#f5f5f5",
+                  fontSize: "0.875rem",
+                  fontFamily: "var(--font-body)",
+                  color: "#999",
+                  cursor: "not-allowed",
+                }}
+              />
+              <Button
+                disabled
+                style={{
+                  background: "var(--accent-gradient)",
+                  color: "white",
+                  padding: "0.75rem",
+                  borderRadius: "8px",
+                  cursor: "not-allowed",
+                  opacity: 0.6,
+                }}
+              >
+                <Send size={18} />
+              </Button>
+            </Flex>
+          </Card>
+        </Box>
+      )}
     </Box>
   );
 }
