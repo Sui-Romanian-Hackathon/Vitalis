@@ -405,7 +405,7 @@ All NFTs and data objects are stored on Sui's object model:
 ## 👥 Team
 
 **Project Name:** Vitalis
-**Track:** Open Track / DeFi & Infrastructure
+**Track:** Defi and City tech
 **Built for:** Sui Hackathon 2025
 
 ---
