@@ -123,7 +123,7 @@ export function ClientAccount({ onLogout }: { onLogout: () => void }) {
                     Member Since:
                   </Text>
                   <Text size="2">
-                    {new Date(client.created_at).toLocaleDateString()}
+                    {new Date(client.created_at * 1000).toLocaleDateString()}
                   </Text>
                 </Flex>
               </Flex>
