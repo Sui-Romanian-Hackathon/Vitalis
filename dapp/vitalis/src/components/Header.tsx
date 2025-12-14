@@ -1,6 +1,7 @@
-import { Flex, Heading, Box, Button, Badge, Text } from "@radix-ui/themes";
+import { Flex, Heading, Box, Button, Badge, Text, Card } from "@radix-ui/themes";
 import { getClientData } from "../clientStorage";
-import { Calendar, MessageSquare, User } from "lucide-react";
+import { Calendar, MessageSquare, User, Send, X } from "lucide-react";
+import { useState } from "react";
 
 interface HeaderProps {
   currentPage: "businesses" | "account";
@@ -9,6 +10,7 @@ interface HeaderProps {
 
 export function Header({ currentPage, onNavigate }: HeaderProps) {
   const client = getClientData();
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   return (
     <Box
