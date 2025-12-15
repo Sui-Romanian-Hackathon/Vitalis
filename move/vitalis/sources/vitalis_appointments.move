@@ -135,4 +135,5 @@ module vitalis::vitalis_appointments {
         object::delete(id);
     }
 
+
 }
